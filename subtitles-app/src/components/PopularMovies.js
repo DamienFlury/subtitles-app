@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import { withStyles, CircularProgress } from '@material-ui/core';
-import apiKey from '../apiKey';
 import MoviesGrid from './movies/MoviesGrid';
 import SearchForm from './SearchForm';
+import apiKey from '../apiKey';
 
 const PopularMovies = ({ classes }) => {
   const [movies, setMovies] = useState([]);
