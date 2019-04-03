@@ -1,0 +1,37 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true
+  },
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "plugins": ["react"],
+  "rules": {
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "no-unused-expressions": "error",
+    "object-curly-spacing": ["error", "always"],
+    "arrow-spacing": "error",
+    "space-infix-ops": "error",
+    "react/self-closing-comp": "error",
+    "react/jsx-pascal-case": "error",
+    "react/require-render-return": "error",
+    "react/jsx-props-no-multi-spaces": "error",
+    "react/jsx-curly-spacing": ["error", { "when": "never" }],
+    "react/jsx-first-prop-new-line": ["error", "multiline"],
+    "react/prop-types": "off"
+  }
+}
