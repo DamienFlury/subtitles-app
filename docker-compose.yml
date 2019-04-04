@@ -1,0 +1,14 @@
+version: '3.5'
+services: 
+  subtitles-app:
+    container_name: subtitles-app
+    build: 
+      context: ./subtitles-app
+      dockerfile: Dockerfile
+    volumes:
+      - './subtitles-app:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    ports:
+      - '3000:3000'
+    environment: 
+      - NODE_ENV=development
