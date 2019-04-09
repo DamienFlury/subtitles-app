@@ -34,7 +34,7 @@ const MovieDetail = ({ match, classes }) => {
           </Fab>
         )}
         <div>
-          <Fab variant="extended" className={classes.fab} aria-label="Subtitles" component={Link} to={`/subtitles/${match.params.id}`}>
+          <Fab variant="extended" className={classes.fab} aria-label="Subtitles" component={Link} to={`/subtitles/${movie.imdb_id}`}>
             Subtitles
           </Fab>
         </div>

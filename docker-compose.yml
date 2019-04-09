@@ -12,3 +12,10 @@ services:
       - '3000:3000'
     environment: 
       - NODE_ENV=development
+  subtitles-web:
+    container_name: subtitles-server
+    build:
+      context: ./subtitles-server
+      dockerfile: Dockerfile
+    ports:
+      - '5000:5000'

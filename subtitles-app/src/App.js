@@ -31,7 +31,7 @@ const App = () => {
         <RoutesContainer>
           <Switch>
             <Route path="/movies/:id" component={MovieDetail} />
-            <Route path="/subtitles/:id" component={Subtitles} />
+            <Route path="/subtitles/:imdbId" component={Subtitles} />
             <Route path="/" component={PopularMovies} />
           </Switch>
         </RoutesContainer>
