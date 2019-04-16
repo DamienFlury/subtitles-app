@@ -13,6 +13,7 @@ from flask import jsonify
 from flask_cors import CORS
 from itertools import groupby
 import os
+import string
 
 
 
@@ -46,6 +47,7 @@ def getTexts(imdb_id):
 
   browser.get(href)
   download_href = browser.find_element_by_class_name('download-subtitle').get_attribute('href')
+  browser.quit()
 
   resp = urlopen(download_href)
   with ZipFile(BytesIO(resp.read())) as zipfile:
@@ -71,9 +73,11 @@ CORS(app)
 def hello_world(imdb_id):
   subtitles = getTexts(imdb_id)
   joined = ' '.join(subtitles)
-  words = joined.split()
+  words = joined.lower().translate(str.maketrans('', '', string.punctuation)).split()
+  most_common_words = open('most_common_words.txt').read().lower().splitlines()
   most_used_words = get_most_used_words(words)
-  return jsonify(most_used_words[:10])
+  important_words = [x for x in most_used_words if x not in most_common_words]
+  return jsonify(important_words[:100])
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0')
