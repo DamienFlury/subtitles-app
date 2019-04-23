@@ -14,6 +14,7 @@ from flask_cors import CORS
 from itertools import groupby
 import os
 import string
+import re
 
 
 
@@ -72,12 +73,14 @@ CORS(app)
 @app.route("/subtitles/<imdb_id>")
 def hello_world(imdb_id):
   subtitles = getTexts(imdb_id)
-  joined = ' '.join(subtitles)
-  words = joined.lower().translate(str.maketrans('', '', string.punctuation)).split()
-  most_common_words = open('most_common_words.txt').read().lower().splitlines()
-  most_used_words = get_most_used_words(words)
-  important_words = [x for x in most_used_words if x not in most_common_words]
-  return jsonify(important_words[:100])
+  without_special_chars = list(map(lambda subtitle: re.sub(r'([\!,\?\."-]+|<[^>]*>)', ' ', subtitle), subtitles))
+  # words = joined.lower().translate(str.maketrans('', '', string.punctuation)).split()
+  words = ' '.join(without_special_chars).split()
+  unique_words = list(set(words))
+  # most_common_words = open('most_common_words.txt').read().lower().splitlines()
+  # most_used_words = get_most_used_words(words)
+  # important_words = [x for x in most_used_words if x not in most_common_words]
+  return jsonify(unique_words[4:100])
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0')

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, List, ListItem, ListItemText } from '@material-ui/core';
 import Axios from 'axios';
+import { Switch, Route } from 'react-router-dom';
+import SubtitlesOverwiew from './subtitles/SubtitlesOverview';
+import { CircularProgress } from '@material-ui/core';
 
 const Subtitles = ({ match }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -13,18 +15,10 @@ const Subtitles = ({ match }) => {
         setIsLoading(false);
       });
   }, []);
-  return (
-  <>
-    <Typography>Subtitles</Typography>
-    <Typography>{match.params.title}</Typography>
-    <List>
-      {subtitles.map((subtitle, index) => 
-        <ListItem key={index}>
-          <ListItemText primary={subtitle} />
-        </ListItem>
-      )}
-    </List>
-  </>
+  return isLoading ? (<CircularProgress />) : (
+    <Switch>
+      <Route path="/subtitles/:imdbId" render={params => <SubtitlesOverwiew {...params} subtitles={subtitles} />} />
+    </Switch>
   );
 };
 
