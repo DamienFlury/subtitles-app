@@ -15,7 +15,7 @@ const MovieDetail = ({ match, classes }) => {
         setMovie(response.data);
         setIsLoading(false);
       });
-  }, []);
+  }, [match.params.id]);
 
   return isLoading || (
     <Paper className={classes.wrapper}>

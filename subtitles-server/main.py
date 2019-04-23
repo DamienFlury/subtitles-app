@@ -17,7 +17,6 @@ import string
 import re
 
 
-
 def getTexts(imdb_id):
   # path_to_extension = r'C:\Users\fluryd\AppData\Local\Google\Chrome\User Data\Default\Extensions\gighmmpiobklfepjocnamgkkbiglidom\3.42.0_0'
 
