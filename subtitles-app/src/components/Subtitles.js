@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 import SubtitlesOverwiew from './subtitles/SubtitlesOverview';
 import { CircularProgress } from '@material-ui/core';
 import { translationApiKey } from '../apiKey';
+import Cards from './subtitles/Cards';
 
 const Subtitles = ({ match }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -20,7 +21,8 @@ const Subtitles = ({ match }) => {
   }, [match.params.imdbId]);
   return isLoading ? (<CircularProgress />) : (
     <Switch>
-      <Route path="/subtitles/:imdbId" render={params => <SubtitlesOverwiew {...params} subtitles={subtitles} />} />
+      <Route path="/subtitles/:imdbId/cards" render={params => <Cards {...params} subtitles={subtitles} />} />
+      <Route path="/subtitles/:imdbId" render={params => <SubtitlesOverwiew {...params} match={match} subtitles={subtitles} />} />
     </Switch>
   );
 };
