@@ -5,10 +5,17 @@ import apiKey from '../apiKey';
 import Axios from 'axios';
 import MoviePropTable from './movies/MoviePropTable';
 import { Link } from 'react-router-dom';
+import { useSpring, animated } from 'react-spring';
 
 const MovieDetail = ({ match, classes }) => {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const props = useSpring({
+    opacity: isLoading ? 0 : 1,
+    from: {
+      opacity: 0,
+    }
+  });
   useEffect(() => {
     Axios.get(`https://api.themoviedb.org/3/movie/${match.params.id}?api_key=${apiKey}&language=en-US`)
       .then(response => {
@@ -17,29 +24,33 @@ const MovieDetail = ({ match, classes }) => {
       });
   }, [match.params.id]);
 
-  return isLoading || (
-    <Paper className={classes.wrapper}>
-      <img className={classes.image} src={`http://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt="Poster" />
-      <div className={classes.main}>
-        <Typography variant="h3" gutterBottom>{movie.title}</Typography>
-        <MoviePropTable movie={movie} />
-        <Paper className={classes.description}>
-          <Typography variant="h5" gutterBottom>Description</Typography>
-          <Typography>{movie.overview}</Typography>
-        </Paper>
-        {movie.homepage && (
-          <Fab className={classes.fab} variant="extended" aria-label="To Homepage" href={movie.homepage} target="_blank">
+  return (
+    <animated.div style={props}>
+      { isLoading || (
+        <Paper className={classes.wrapper}>
+          <img className={classes.image} src={`http://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt="Poster" />
+          <div className={classes.main}>
+            <Typography variant="h3" gutterBottom>{movie.title}</Typography>
+            <MoviePropTable movie={movie} />
+            <Paper className={classes.description}>
+              <Typography variant="h5" gutterBottom>Description</Typography>
+              <Typography>{movie.overview}</Typography>
+            </Paper>
+            {movie.homepage && (
+              <Fab className={classes.fab} variant="extended" aria-label="To Homepage" href={movie.homepage} target="_blank">
             Homepage
-            <LaunchIcon className={classes.fabIcon} />
-          </Fab>
-        )}
-        <div>
-          <Fab variant="extended" className={classes.fab} aria-label="Subtitles" component={Link} to={`/subtitles/${movie.imdb_id}`}>
+                <LaunchIcon className={classes.fabIcon} />
+              </Fab>
+            )}
+            <div>
+              <Fab variant="extended" className={classes.fab} aria-label="Subtitles" component={Link} to={`/subtitles/${movie.imdb_id}`}>
             Subtitles
-          </Fab>
-        </div>
-      </div>
-    </Paper>
+              </Fab>
+            </div>
+          </div>
+        </Paper>
+      )}
+    </animated.div>
   );
 };
 

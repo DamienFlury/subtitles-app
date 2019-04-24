@@ -10,6 +10,7 @@ import json
 import pysrt
 from flask import Flask
 from flask import jsonify
+from flask import abort
 from flask_cors import CORS
 from itertools import groupby
 import os
@@ -37,30 +38,33 @@ def getTexts(imdb_id):
 
   browser = webdriver.Chrome('chromedriver.exe')
 
+  try:
+    browser.get('http://www.yifysubtitles.com/search?q=' + imdb_id)
+    link = browser.find_element_by_class_name('media-heading')
+    link.click()
+    english_text = browser.find_element_by_xpath("//*[contains(text(), 'English')]")
+    english_subtitles_link = english_text.find_element_by_xpath("./../..").find_element_by_tag_name('a')
+    href = english_subtitles_link.get_attribute('href')
 
-  browser.get('http://www.yifysubtitles.com/search?q=' + imdb_id)
-  link = browser.find_element_by_class_name('media-heading')
-  link.click()
-  english_text = browser.find_element_by_xpath("//*[contains(text(), 'English')]")
-  english_subtitles_link = english_text.find_element_by_xpath("./../..").find_element_by_tag_name('a')
-  href = english_subtitles_link.get_attribute('href')
+    browser.get(href)
+    download_href = browser.find_element_by_class_name('download-subtitle').get_attribute('href')
+    browser.quit()
 
-  browser.get(href)
-  download_href = browser.find_element_by_class_name('download-subtitle').get_attribute('href')
-  browser.quit()
+    resp = urlopen(download_href)
+    with ZipFile(BytesIO(resp.read())) as zipfile:
+      list_of_files = zipfile.namelist()
+      for filename in list_of_files:
+        if filename.endswith('.srt'):
+          file = zipfile.extract(filename, 'subtitles')
+          os.rename(file, subtitles_filename)
 
-  resp = urlopen(download_href)
-  with ZipFile(BytesIO(resp.read())) as zipfile:
-    list_of_files = zipfile.namelist()
-    for filename in list_of_files:
-      if filename.endswith('.srt'):
-        file = zipfile.extract(filename, 'subtitles')
-        os.rename(file, subtitles_filename)
+    subs = pysrt.open(subtitles_filename)
 
-  subs = pysrt.open(subtitles_filename)
-
-  texts = list(map(lambda line: line.text, subs))
-  return texts
+    texts = list(map(lambda line: line.text, subs))
+    return texts
+  except:
+    browser.quit()
+    abort(404)
 
 def get_most_used_words(words):
   return sorted(set(words), key=words.count, reverse=True)
@@ -74,7 +78,7 @@ def hello_world(imdb_id):
   subtitles = getTexts(imdb_id)
   without_special_chars = list(map(lambda subtitle: re.sub(r'([\!,\?\."-]+|<[^>]*>)', ' ', subtitle), subtitles))
   # words = joined.lower().translate(str.maketrans('', '', string.punctuation)).split()
-  words = ' '.join(without_special_chars).split()
+  words = ' '.join(without_special_chars).lower().split()
   unique_words = list(set(words))
   # most_common_words = open('most_common_words.txt').read().lower().splitlines()
   # most_used_words = get_most_used_words(words)

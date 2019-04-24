@@ -9,7 +9,7 @@ const Snake = ({ classes }) => {
       <canvas ref={element} width="600" height="300" className={classes.canvas} />
       <div className={classes.statusBar}>
         <span className={classes.spacer} />
-        <Typography variant="h5">Score: {score}</Typography>
+        <Typography variant="h5">Score:{score}</Typography>
       </div>
     </Paper>
   );

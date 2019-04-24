@@ -4,12 +4,19 @@ import { withStyles, CircularProgress } from '@material-ui/core';
 import MoviesGrid from './movies/MoviesGrid';
 import SearchForm from './SearchForm';
 import apiKey from '../apiKey';
+import { useSpring, animated } from 'react-spring';
 
 const PopularMovies = ({ classes }) => {
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [title, setTitle] = useState('');
+  const props = useSpring({
+    opacity: isLoading ? 0 : 1,
+    from: {
+      opacity: 0
+    }
+  });
 
   useEffect(() => {
     setPage(1);
@@ -38,7 +45,7 @@ const PopularMovies = ({ classes }) => {
 
 
   return (
-    <>
+    <animated.div style={props}>
       <SearchForm
         onSubmit={text => setTitle(text)} />
       {isLoading ||
@@ -49,7 +56,7 @@ const PopularMovies = ({ classes }) => {
       <div className={classes.spinner}>
         <CircularProgress />
       </div>
-    </>
+    </animated.div>
   );
 };
 
